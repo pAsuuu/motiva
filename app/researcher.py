@@ -12,13 +12,91 @@ HEADERS = {
 }
 
 class Researcher:
-    """Scrapes job descriptions from URLs and gathers deep contextual intelligence on companies."""
+    """Scrapes job descriptions from URLs, bypasses job board authwalls, and gathers deep company intelligence."""
 
-    @staticmethod
-    async def fetch_job_from_url(url: str) -> Dict[str, Any]:
+    @classmethod
+    async def _handle_linkedin_url(cls, url: str) -> Optional[Dict[str, Any]]:
+        """Bypasses LinkedIn authwalls by querying the public guest job posting endpoint."""
+        try:
+            parsed = urllib.parse.urlparse(url)
+            qs = urllib.parse.parse_qs(parsed.query)
+            
+            # Extract job ID from currentJobId param or /jobs/view/<id> path
+            job_id = qs.get("currentJobId", [""])[0]
+            if not job_id:
+                m = re.search(r'/jobs/view/(\d+)', url)
+                if m:
+                    job_id = m.group(1)
+
+            keywords = qs.get("keywords", [""])[0]
+
+            if not job_id:
+                # If only keywords are present without job_id
+                if keywords:
+                    meta = JobAnalyzer.clean_job_title(keywords)
+                    return {
+                        "success": True,
+                        "url": url,
+                        "raw_title": keywords,
+                        "clean_title": meta["clean_title"],
+                        "company_name": meta["company_name"],
+                        "contract_type": meta["contract_type"],
+                        "department": meta["department"],
+                        "clean_subject": meta["clean_subject"],
+                        "text": f"Poste identifié depuis les paramètres de recherche : {keywords}",
+                        "source": "linkedin_keywords_fallback"
+                    }
+                return None
+
+            guest_url = f"https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{job_id}"
+            async with httpx.AsyncClient(headers=HEADERS, follow_redirects=True, timeout=10.0) as client:
+                resp = await client.get(guest_url)
+                if resp.status_code == 200 and len(resp.text) > 500:
+                    soup = BeautifulSoup(resp.text, "html.parser")
+                    
+                    title_el = soup.find("h2", class_=re.compile(r"topcard__title|top-card-layout__title")) or soup.find("h1")
+                    comp_el = soup.find("a", class_=re.compile(r"topcard__org-name-link|topcard__flavor")) or soup.find("span", class_=re.compile(r"topcard__flavor"))
+                    desc_el = soup.find("div", class_=re.compile(r"show-more-less-html__markup|description__text")) or soup.find("section")
+
+                    raw_title = title_el.get_text().strip() if title_el else keywords
+                    comp_name = comp_el.get_text().strip() if comp_el else ""
+                    desc_text = desc_el.get_text(separator="\n").strip() if desc_el else ""
+
+                    # Clean title and company
+                    meta = JobAnalyzer.clean_job_title(raw_title or keywords, company_hint=comp_name)
+                    final_company = comp_name or meta["company_name"]
+                    deep_info = JobAnalyzer.get_deep_company_context(final_company)
+
+                    return {
+                        "success": True,
+                        "url": url,
+                        "raw_title": raw_title,
+                        "clean_title": meta["clean_title"],
+                        "company_name": final_company,
+                        "contract_type": meta["contract_type"],
+                        "department": meta["department"],
+                        "clean_subject": meta["clean_subject"],
+                        "text": desc_text[:12000],
+                        "company_deep_info": deep_info,
+                        "source": "linkedin_guest_api"
+                    }
+        except Exception:
+            pass
+
+        return None
+
+    @classmethod
+    async def fetch_job_from_url(cls, url: str) -> Dict[str, Any]:
         if not url.startswith(("http://", "https://")):
             url = "https://" + url
 
+        # 1. Specialized LinkedIn bypass
+        if "linkedin.com" in url:
+            linkedin_res = await cls._handle_linkedin_url(url)
+            if linkedin_res and linkedin_res.get("success"):
+                return linkedin_res
+
+        # 2. General Scraping
         try:
             async with httpx.AsyncClient(headers=HEADERS, follow_redirects=True, timeout=12.0) as client:
                 resp = await client.get(url)
@@ -39,6 +117,38 @@ class Researcher:
                 raw_title = soup.title.string.strip()
             elif soup.find("h1"):
                 raw_title = soup.find("h1").get_text().strip()
+
+            # Anti-Authwall check: If page is a login wall ("S'identifier", "Sign in", etc.)
+            authwall_signals = ["s'identifier", "s’identifier", "se connecter", "sign in", "authwall", "log in"]
+            if any(signal in raw_title.lower() for signal in authwall_signals):
+                # Check if URL had keywords or params we can salvage
+                parsed_url = urllib.parse.urlparse(url)
+                qs = urllib.parse.parse_qs(parsed_url.query)
+                keywords = qs.get("keywords", [""])[0] or qs.get("q", [""])[0]
+                if keywords:
+                    meta = JobAnalyzer.clean_job_title(keywords)
+                    return {
+                        "success": True,
+                        "url": url,
+                        "raw_title": keywords,
+                        "clean_title": meta["clean_title"],
+                        "company_name": meta["company_name"],
+                        "contract_type": meta["contract_type"],
+                        "department": meta["department"],
+                        "clean_subject": meta["clean_subject"],
+                        "text": f"Poste identifié : {keywords}. (Le site requiert une connexion pour lire le texte complet).",
+                        "authwall_detected": True,
+                        "source": "authwall_keywords_fallback"
+                    }
+                else:
+                    return {
+                        "success": False,
+                        "url": url,
+                        "title": "",
+                        "clean_title": "",
+                        "text": "",
+                        "error": "Ce site (ex: LinkedIn) demande d'être connecté pour afficher l'annonce. Astuce : Copiez le texte de l'annonce depuis votre navigateur et collez-le dans l'onglet 'Coller le texte' !"
+                    }
 
             # Clean job title intelligently
             cleaned_meta = JobAnalyzer.clean_job_title(raw_title)
@@ -68,10 +178,8 @@ class Researcher:
 
             cleaned_text = "\n".join(cleaned_lines)[:12000]
 
-            # If company name was detected from title or domain, get deep context
             company_name = cleaned_meta.get("company_name", "")
             if not company_name:
-                # Try inferring from domain (e.g. stellantis.com -> Stellantis)
                 parsed_domain = urllib.parse.urlparse(url).netloc
                 domain_parts = parsed_domain.replace("www.", "").split(".")
                 if domain_parts and len(domain_parts[0]) > 2 and domain_parts[0] not in ["linkedin", "welcometothejungle", "indeed"]:
@@ -101,7 +209,7 @@ class Researcher:
                 "title": "",
                 "clean_title": "",
                 "text": "",
-                "error": f"Impossible d'extraire automatiquement l'URL ({str(e)}). Vous pouvez coller le texte ci-dessous."
+                "error": f"Impossible d'extraire automatiquement l'URL ({str(e)}). Vous pouvez coller le texte ci-dessous dans l'onglet 'Coller le texte'."
             }
 
     @staticmethod
@@ -113,7 +221,6 @@ class Researcher:
 
         insights: List[str] = []
 
-        # 1. Deep curated context for top enterprises & scale-ups
         deep = JobAnalyzer.get_deep_company_context(cleaned_name)
         if deep.get("sector"):
             insights.append(f"Secteur : {deep['sector']}")
@@ -124,7 +231,6 @@ class Researcher:
         if deep.get("challenges"):
             insights.append(f"Défis opérationnels de l'équipe : {deep['challenges']}")
 
-        # 2. Wikipedia summary for real-time overview
         try:
             wiki_url = f"https://fr.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(cleaned_name)}"
             async with httpx.AsyncClient(headers=HEADERS, timeout=4.0) as client:

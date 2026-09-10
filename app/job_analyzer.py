@@ -5,6 +5,20 @@ class JobAnalyzer:
     """Intelligently cleans scraped job titles and extracts structured metadata."""
 
     KNOWN_COMPANIES = {
+        "nestlé": {
+            "name": "Nestlé",
+            "sector": "Agroalimentaire & Produits de Grande Consommation",
+            "strategy": "Transformation digitale omnicanale, innovation produit saine et durable, digitalisation des opérations IT et Trade Marketing.",
+            "brands": "Nespresso, Nescafé, Purina, KitKat, Vittel, Perrier, Maggi",
+            "challenges": "Alignement des projets IT avec les enjeux métiers, optimisation de la supply chain et déploiement d'outils collaboratifs à l'échelle."
+        },
+        "nestle": {
+            "name": "Nestlé",
+            "sector": "Agroalimentaire & Produits de Grande Consommation",
+            "strategy": "Transformation digitale omnicanale, innovation produit saine et durable, digitalisation des opérations IT et Trade Marketing.",
+            "brands": "Nespresso, Nescafé, Purina, KitKat, Vittel, Perrier, Maggi",
+            "challenges": "Alignement des projets IT avec les enjeux métiers, optimisation de la supply chain et déploiement d'outils collaboratifs à l'échelle."
+        },
         "stellantis": {
             "name": "Stellantis",
             "sector": "Automobile & Mobilité Durable",
@@ -39,7 +53,8 @@ class JobAnalyzer:
     }
 
     CONTRACT_PATTERNS = [
-        (r'\b(?:apprentissage|alternance|alternant(?:e)?|apprenti(?:e)?)\b', 'Apprentissage'),
+        (r'\b(?:apprentissage|apprenti(?:e)?)\b', 'Apprentissage'),
+        (r'\b(?:alternance|alternant(?:e)?)\b', 'Alternance'),
         (r'\b(?:stage|stagiaire|internship|intern)\b', 'Stage'),
         (r'\b(?:cdi|contrat\s+à\s+durée\s+indéterminée|permanent)\b', 'CDI'),
         (r'\b(?:cdd|contrat\s+à\s+durée\s+déterminée|fixed-term)\b', 'CDD'),
@@ -47,9 +62,10 @@ class JobAnalyzer:
     ]
 
     DEPARTMENT_KEYWORDS = [
+        (r'\b(?:it|informatique|systèmes\s+d[\'\']information|tech)\b', 'Direction des Systèmes d\'Information & IT'),
         (r'\bmarketing\b', 'Direction Marketing & Communication'),
         (r'\bcommunication\b', 'Direction de la Communication'),
-        (r'\b(?:développeur|software|engineer|tech|ingénieur)\b', 'Direction Technique & Ingénierie'),
+        (r'\b(?:développeur|software|engineer|ingénieur)\b', 'Direction Technique & Ingénierie'),
         (r'\b(?:data|data\s+science|analyst)\b', 'Pôle Data & Analytics'),
         (r'\b(?:produit|product|pm)\b', 'Équipe Produit'),
         (r'\b(?:sales|commercial|business\s+dev)\b', 'Direction Commerciale & Business Development'),
@@ -59,10 +75,6 @@ class JobAnalyzer:
 
     @classmethod
     def clean_job_title(cls, raw_title: str, company_hint: str = "") -> Dict[str, Any]:
-        """
-        Cleans job titles from site wrappers such as:
-        'Stellantis recrute pour des postes de Apprentissage : Assistant chef de projet marketing'
-        """
         text = raw_title.strip()
 
         detected_company = company_hint.strip()
@@ -88,7 +100,8 @@ class JobAnalyzer:
             r'^[a-zA-Z0-9\s\'.-]{2,30}\s+recrute\s+(?:pour\s+(?:des\s+postes?\s+de\s+|un\s+poste\s+de\s+)?)?',
             r'^(?:des\s+postes?\s+de|un\s+poste\s+de)\s+',
             r'^(?:recherche\s+(?:d[\'\']un|d[\'\']une)?\s+)',
-            r'^(?:poste\s+de\s+)'
+            r'^(?:poste\s+de\s+)',
+            r'^(?:alternant(?:e)?|apprenti(?:e)?|stagiaire)\s+(?:en\s+|de\s+)?'
         ]
 
         cleaned = text
@@ -113,6 +126,8 @@ class JobAnalyzer:
             lower_word = word.lower()
             if i > 0 and lower_word in lowercase_exceptions:
                 capitalized_words.append(lower_word)
+            elif lower_word in ["it", "rh", "crm", "seo", "sea", "api", "bi"]:
+                capitalized_words.append(lower_word.upper())
             else:
                 capitalized_words.append(word.capitalize())
         clean_title = " ".join(capitalized_words)
