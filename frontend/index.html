@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-[#0b0f19]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motiva — Lettres de motivation d'élite & 100% Humaines</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body class="min-h-full flex flex-col antialiased text-slate-100 selection:bg-blue-500 selection:text-white">
+
+  <!-- Top Announcement / Brand Banner -->
+  <div class="bg-gradient-to-r from-blue-900/60 via-indigo-950/60 to-slate-900/60 border-b border-white/5 py-2 px-4 text-center text-xs font-medium text-slate-300">
+    <span class="inline-flex items-center space-x-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-semibold text-white">Moteur Anti-IA v2.4 Actif</span>
+      <span class="text-slate-500">&bull;</span>
+      <span>0 cliché détecté &bull; Argumentation factuelle certifiée</span>
+      <span class="text-slate-500">&bull;</span>
+      <a href="#match-section" class="text-blue-400 hover:text-blue-300 underline font-semibold">Voir le score de synergie</a>
+    </span>
+  </div>
+
+  <!-- Header -->
+  <header class="glass-panel-dark sticky top-0 z-40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl glow-gradient flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/30 ring-1 ring-white/20">
+          M
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-lg font-bold tracking-tight text-white">Motiva</span>
+            <span class="text-[10px] uppercase font-extrabold tracking-widest px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              Studio Pro
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Générateur de lettres de motivation authentiques & export PDF haute fidélité</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Live API status badge -->
+        <button id="btn-open-settings" class="inline-flex items-center space-x-2 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-xl transition">
+          <span class="w-2 h-2 rounded-full bg-amber-400" id="api-status-dot"></span>
+          <span id="api-status-label">Configurer IA</span>
+        </button>
+
+        <!-- GitHub Repo Link -->
+        <a id="github-link" href="https://github.com/pAsuuu/motiva" target="_blank" class="inline-flex items-center space-x-1.5 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-xl transition">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- LEFT COLUMN: Inputs, Intelligence & Personalization -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Step 1: CV Upload & Contact Verification -->
+      <section class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">1</span>
+            <h2 class="font-bold text-slate-900 text-sm">Votre CV & Vos Coordonnées Réelles</h2>
+          </div>
+          <span id="cv-status" class="text-xs text-slate-500 font-medium">En attente</span>
+        </div>
+
+        <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-5 text-center cursor-pointer transition bg-white/50 hover:bg-blue-50/40 group">
+          <input type="file" id="cv-file-input" accept=".pdf,.docx,.doc,.txt" class="hidden">
+          <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto group-hover:scale-110 transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          </div>
+          <p class="mt-2 text-xs font-semibold text-slate-800">Glissez votre CV ici ou <span class="text-blue-600 underline">parcourez</span></p>
+          <p class="text-[11px] text-slate-400 mt-0.5">PDF, DOCX ou texte (extraction instantanée)</p>
+        </div>
+
+        <!-- Real Contact Form (Synced live with PDF) -->
+        <div id="contact-sync-box" class="mt-4 pt-3 border-t border-slate-200/80 space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold uppercase tracking-wider text-slate-500">Coordonnées vérifiées (incluses sur le PDF)</span>
+            <span class="text-emerald-600 font-semibold flex items-center space-x-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Synchronisé</span>
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Nom complet</label>
+              <input type="text" id="contact-name" placeholder="Prénom Nom" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Titre professionnel</label>
+              <input type="text" id="contact-headline" placeholder="Ex: Lead Engineer" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Adresse Email</label>
+              <input type="email" id="contact-email" placeholder="email@domaine.com" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Numéro de Téléphone</label>
+              <input type="tel" id="contact-phone" placeholder="06 00 00 00 00" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Ville & Pays</label>
+            <input type="text" id="contact-location" placeholder="Paris, France" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+          </div>
+        </div>
+
+        <div id="cv-info-card" class="mt-3 hidden bg-slate-100 rounded-xl p-2.5 text-[11px] flex items-center justify-between">
+          <span id="cv-filename" class="font-medium text-slate-700 truncate max-w-[220px]">mon_cv.pdf</span>
+          <button id="btn-toggle-cv-text" class="text-blue-600 font-medium hover:underline">Afficher texte brut</button>
+        </div>
+        <textarea id="cv-extracted-text" class="mt-2 hidden w-full text-xs font-mono bg-white border border-slate-200 rounded-lg p-2 h-24 focus:outline-none" readonly></textarea>
+      </section>
+
+      <!-- Step 2: Company & Job -->
+      <section class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">2</span>
+          <h2 class="font-bold text-slate-900 text-sm">L'Entreprise & Le Poste Ciblé</h2>
+        </div>
+
+        <div>
+          <label for="company-name" class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'entreprise *</label>
+          <input type="text" id="company-name" placeholder="Ex: Alan, Doctolib, Qonto, Michelin, Airbus..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="job-title" class="block text-xs font-semibold text-slate-700 mb-1">Intitulé exact du poste</label>
+          <input type="text" id="job-title" placeholder="Ex: Senior Fullstack Engineer, Chef de Produit..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <div class="flex border-b border-slate-200 text-xs mb-3">
+            <button id="tab-url" class="py-1.5 px-3 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition">Lien de l'offre (URL)</button>
+            <button id="tab-text" class="py-1.5 px-3 font-medium text-slate-500 hover:text-slate-800 focus:outline-none transition">Coller le texte</button>
+          </div>
+
+          <!-- URL Input pane -->
+          <div id="pane-url" class="space-y-2">
+            <div class="flex space-x-2">
+              <input type="url" id="job-url" placeholder="https://www.welcometothejungle.com/..." class="flex-1 text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <button id="btn-fetch-url" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-2 rounded-lg transition inline-flex items-center space-x-1 shadow-sm">
+                <span id="fetch-url-label">Analyser</span>
+              </button>
+            </div>
+            <p id="url-feedback" class="text-[11px] text-slate-400">L'offre sera lue et synthétisée automatiquement.</p>
+          </div>
+
+          <!-- Paste Text pane -->
+          <div id="pane-text" class="hidden space-y-2">
+            <textarea id="job-text" placeholder="Collez ici le descriptif complet du poste, missions, profil recherché..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-28"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Tone & Personal Anecdote -->
+      <section class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">3</span>
+          <h2 class="font-bold text-slate-900 text-sm">Tonalité & Angle d'Attaque</h2>
+        </div>
+
+        <div>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="cursor-pointer border-2 border-blue-600 bg-blue-50/70 rounded-xl p-2.5 text-center text-xs block transition tone-card shadow-sm" data-tone="direct_authentic">
+              <input type="radio" name="tone" value="direct_authentic" checked class="hidden">
+              <span class="font-bold text-slate-900 block text-[11px]">Authentique & Direct</span>
+              <span class="text-[10px] text-slate-500">Sans clichés &bull; Pro</span>
+            </label>
+            <label class="cursor-pointer border-2 border-slate-200 rounded-xl p-2.5 text-center text-xs block transition hover:bg-slate-50 tone-card" data-tone="startup_tech">
+              <input type="radio" name="tone" value="startup_tech" class="hidden">
+              <span class="font-bold text-slate-900 block text-[11px]">Tech & Startup</span>
+              <span class="text-[10px] text-slate-500">Impact & Vélocité</span>
+            </label>
+            <label class="cursor-pointer border-2 border-slate-200 rounded-xl p-2.5 text-center text-xs block transition hover:bg-slate-50 tone-card" data-tone="corporate_executive">
+              <input type="radio" name="tone" value="corporate_executive" class="hidden">
+              <span class="font-bold text-slate-900 block text-[11px]">Corporate & Cadre</span>
+              <span class="text-[10px] text-slate-500">Vision & Leadership</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label for="custom-notes" class="block text-xs font-semibold text-slate-700 mb-1">Détails ou accomplissements spécifiques à valoriser (optionnel)</label>
+          <textarea id="custom-notes" placeholder="Ex: 'Insister sur ma dernière refonte microservices et mon habitude du travail asynchrone.'" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-16"></textarea>
+        </div>
+      </section>
+
+      <!-- Main Action Button -->
+      <div>
+        <button id="btn-generate" class="w-full py-3.5 px-4 glow-gradient hover:opacity-95 active:scale-[0.99] text-white font-bold rounded-2xl text-sm shadow-xl shadow-blue-500/25 transition flex items-center justify-center space-x-2 ring-1 ring-white/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span id="generate-btn-text">Générer ma lettre de motivation haute fidélité</span>
+        </button>
+
+        <div id="generation-progress" class="hidden mt-3 bg-blue-900/40 border border-blue-500/30 rounded-xl p-3 text-xs text-blue-200 space-y-1.5">
+          <div class="flex items-center space-x-2">
+            <svg class="animate-spin h-3.5 w-3.5 text-blue-400" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+            <span id="progress-step" class="font-medium">1/3 : Renseignement sur l'entreprise et l'équipe...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Match Score & Synergy Radar (Premium Feature) -->
+      <section id="match-section" class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Indicateurs de Synergie & Impact</h3>
+          </div>
+          <span id="match-score-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            Match : 96%
+          </span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-1 text-center">
+          <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-sm font-extrabold text-blue-600">98%</div>
+            <div class="text-[10px] text-slate-500">Adéquation Poste</div>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-sm font-extrabold text-emerald-600">100%</div>
+            <div class="text-[10px] text-slate-500">Zéro Cliché IA</div>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-sm font-extrabold text-indigo-600">94%</div>
+            <div class="text-[10px] text-slate-500">Fit Équipe</div>
+          </div>
+        </div>
+
+        <div id="insights-container" class="mt-2 text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-200">
+          <div class="flex items-start space-x-2">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span id="insight-1">Recherche contextuelle sur les défis opérationnels de l'entreprise</span>
+          </div>
+          <div class="flex items-start space-x-2">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span id="insight-2">Sélection de réalisations chiffrées réelles extraites de votre CV</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Interactive A4 Document Preview & Controls -->
+    <div class="lg:col-span-7 flex flex-col items-center">
+
+      <!-- Document Controls Toolbar -->
+      <div class="w-full max-w-[210mm] glass-panel-dark border border-white/10 rounded-2xl p-3 mb-4 shadow-xl flex flex-wrap items-center justify-between gap-3 sticky top-20 z-30">
+        <!-- Themes -->
+        <div class="flex items-center space-x-1.5 text-xs">
+          <span class="text-slate-400 font-medium mr-1 text-[11px]">Thème :</span>
+          <button class="theme-btn px-3 py-1 rounded-lg font-semibold border border-blue-500 bg-blue-500/20 text-blue-300 text-[11px] transition" data-theme="modern">Moderne</button>
+          <button class="theme-btn px-3 py-1 rounded-lg font-medium border border-white/10 text-slate-400 hover:bg-white/5 text-[11px] transition" data-theme="executive">Exécutif</button>
+          <button class="theme-btn px-3 py-1 rounded-lg font-medium border border-white/10 text-slate-400 hover:bg-white/5 text-[11px] transition" data-theme="minimal">Minimaliste</button>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center space-x-2">
+          <button id="btn-copy-text" class="text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-xl transition inline-flex items-center space-x-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span>Copier</span>
+          </button>
+          <button id="btn-download-pdf" class="text-xs font-bold text-white glow-gradient hover:opacity-95 px-4 py-1.5 rounded-xl shadow-lg shadow-blue-500/20 transition inline-flex items-center space-x-1.5 ring-1 ring-white/20">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Télécharger le PDF A4</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Editable A4 Letter Canvas -->
+      <div id="print-area" class="a4-sheet theme-modern text-[13px] leading-relaxed select-text" spellcheck="false">
+
+        <!-- Header: Candidate (Left) / Recipient (Right) -->
+        <div class="flex justify-between items-start mb-6">
+          <!-- Candidate info -->
+          <div class="w-7/12 pr-4">
+            <div id="doc-candidate-name" contenteditable="true" class="font-bold text-lg text-slate-900 tracking-tight">Dany Ferreira</div>
+            <div id="doc-candidate-headline" contenteditable="true" class="text-[12px] text-slate-500 font-medium mb-1">Lead Cloud & Software Engineer</div>
+            <div class="text-[11.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              <span><b>Email:</b> <span id="doc-candidate-email" contenteditable="true">dany.ferreira@epitech.digital</span></span>
+              <span>&bull;</span>
+              <span><b>Tél:</b> <span id="doc-candidate-phone" contenteditable="true">06 99 88 77 66</span></span>
+              <span>&bull;</span>
+              <span id="doc-candidate-location" contenteditable="true">Paris, France</span>
+            </div>
+          </div>
+
+          <!-- Recipient info -->
+          <div class="w-5/12 pl-4 text-right">
+            <div id="doc-recipient-company" contenteditable="true" class="font-bold text-slate-900 text-sm">Alan Health</div>
+            <div id="doc-recipient-department" contenteditable="true" class="text-[12px] text-slate-600">À l'attention de l'équipe Recrutement</div>
+            <div id="doc-recipient-city" contenteditable="true" class="text-[12px] text-slate-600">Paris, France</div>
+          </div>
+        </div>
+
+        <!-- Thin accent divider -->
+        <div class="border-b a4-line mb-5"></div>
+
+        <!-- Date -->
+        <div id="doc-date" contenteditable="true" class="text-right text-[12px] text-slate-500 italic mb-5">
+          Paris, le 10 septembre 2026
+        </div>
+
+        <!-- Subject -->
+        <div id="doc-subject" contenteditable="true" class="font-bold a4-accent text-[13.5px] mb-5 tracking-tight">
+          Objet : Candidature au poste de Lead Cloud & Software Engineer
+        </div>
+
+        <!-- Salutation -->
+        <div id="doc-salutation" contenteditable="true" class="font-semibold text-slate-900 mb-4">
+          Madame, Monsieur,
+        </div>
+
+        <!-- Paragraphs -->
+        <div class="space-y-4 text-slate-700 text-justify">
+          <div id="doc-para-hook" contenteditable="true">
+            Votre récente dynamique d'expansion et la recherche constante de transparence dans vos méthodes de travail rendent l'évolution d'Alan particulièrement stimulante. J'ai attentivement suivi vos retours d'expérience sur la montée en charge de votre plateforme et l'exigence que vous portez au quotidien à l'autonomie et à l'impact direct de chaque ingénieur.
+          </div>
+
+          <div id="doc-para-experience" contenteditable="true">
+            Au cours de mes missions, j'ai consacré l'essentiel de mes interventions à bâtir des architectures cloud hautement résilientes et automatisées. Face à un quadruplement des flux de données critiques lors de mon dernier projet d'infrastructure, j'ai conçu un pipeline de déploiement continu sécurisé qui a réduit la latence globale de 35% tout en garantissant une disponibilité de 99,98%. Ce sont ces réflexes de rigueur et cette culture de la livraison mesurable que je souhaite apporter à vos équipes.
+          </div>
+
+          <div id="doc-para-team" contenteditable="true">
+            Rejoindre votre collectif représente pour moi l'opportunité de collaborer avec des ingénieurs animés par une exigence technique sans compromis et des rituels asynchrones sains. Je me projette très naturellement dans la résolution de vos prochains défis de scalabilité aux côtés des équipes produit et plateforme.
+          </div>
+
+          <div id="doc-para-cta" contenteditable="true">
+            Je serais ravi d'échanger une quinzaine de minutes avec vous pour évoquer concrètement comment mon profil peut s'inscrire dans les ambitions techniques de votre feuille de route.
+          </div>
+        </div>
+
+        <!-- Valediction & Signature -->
+        <div class="mt-7">
+          <div id="doc-valediction" contenteditable="true" class="text-slate-800 mb-5">
+            Bien cordialement,
+          </div>
+          <div id="doc-signature" contenteditable="true" class="font-bold text-slate-900 text-[13.5px]">
+            Dany Ferreira
+          </div>
+        </div>
+
+      </div>
+
+      <p class="text-[11px] text-slate-400 mt-3 flex items-center space-x-1.5">
+        <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        <span>Édition dynamique : cliquez sur n'importe quel texte pour l'ajuster en direct avant téléchargement.</span>
+      </p>
+
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4 flex">
+    <div class="glass-panel text-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 text-base">Configuration du Modèle IA</h3>
+        <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label for="input-api-key" class="block font-semibold text-slate-700 mb-1">Clé API Google Gemini</label>
+          <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <p class="text-[11px] text-slate-400 mt-1">Stockée uniquement dans votre navigateur.</p>
+        </div>
+
+        <div>
+          <label for="select-model" class="block font-semibold text-slate-700 mb-1">Modèle</label>
+          <select id="select-model" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommandé & Ultra-rapide)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Raisonnement approfondi)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          </select>
+        </div>
+
+        <div class="bg-blue-50 text-blue-900 p-3 rounded-xl text-[11px] space-y-1">
+          <div class="font-bold">🔑 Obtenir une clé gratuite :</div>
+          <p>Disponible gratuitement sur <a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline font-semibold">Google AI Studio</a>.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-2 pt-2">
+        <button id="btn-save-settings" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md transition">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
