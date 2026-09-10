@@ -12,10 +12,11 @@ from app.cv_parser import CVParser
 from app.researcher import Researcher
 from app.ai_generator import AIGenerator
 from app.pdf_generator import PDFGenerator
+from app.job_analyzer import JobAnalyzer
 
 load_dotenv()
 
-app = FastAPI(title="Motiva — Lettres de motivation d'élite")
+app = FastAPI(title="Motiva — Lettres de motivation d'élite & Analyse Intelligente")
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,6 +31,11 @@ class FetchJobRequest(BaseModel):
 
 class ResearchRequest(BaseModel):
     company_name: str
+    job_text: Optional[str] = ""
+
+class AnalyzeJobRequest(BaseModel):
+    raw_title: Optional[str] = ""
+    company_name: Optional[str] = ""
     job_text: Optional[str] = ""
 
 class GenerateLetterRequest(BaseModel):
@@ -72,6 +78,20 @@ async def fetch_job(payload: FetchJobRequest):
         raise HTTPException(status_code=400, detail="URL requise")
     res = await Researcher.fetch_job_from_url(payload.url)
     return res
+
+@app.post("/api/analyze-job")
+async def analyze_job(payload: AnalyzeJobRequest):
+    meta = JobAnalyzer.clean_job_title(payload.raw_title or "", company_hint=payload.company_name or "")
+    comp_name = meta["company_name"] or payload.company_name or ""
+    deep_ctx = JobAnalyzer.get_deep_company_context(comp_name) if comp_name else {}
+    return {
+        "clean_title": meta["clean_title"],
+        "company_name": comp_name,
+        "contract_type": meta["contract_type"],
+        "department": meta["department"],
+        "clean_subject": meta["clean_subject"],
+        "deep_context": deep_ctx
+    }
 
 @app.post("/api/research-company")
 async def research_company(payload: ResearchRequest):

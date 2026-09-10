@@ -4,7 +4,7 @@ let cvData = {
   raw_text: "",
   contact: {
     name: "Dany Ferreira",
-    headline: "Lead Cloud & Software Engineer",
+    headline: "Assistant Chef de Projet Marketing",
     email: "dany.ferreira@epitech.digital",
     phone: "06 99 88 77 66",
     location: "Paris, France"
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initToneSelector();
   initThemeButtons();
   initActions();
+  initJobInputWatchers();
   checkBackendStatus();
 });
 
@@ -34,7 +35,6 @@ function initContactTwoWaySync() {
     { inputId: "contact-location", docId: "doc-candidate-location", key: "location" }
   ];
 
-  // Set initial values
   fields.forEach(f => {
     const inputEl = document.getElementById(f.inputId);
     const docEl = document.getElementById(f.docId);
@@ -49,7 +49,6 @@ function initContactTwoWaySync() {
       if (extra) extra.textContent = cvData.contact[f.key];
     }
 
-    // Input changed -> update doc
     if (inputEl) {
       inputEl.addEventListener("input", () => {
         const val = inputEl.value.trim();
@@ -62,7 +61,6 @@ function initContactTwoWaySync() {
       });
     }
 
-    // Doc changed -> update input
     if (docEl) {
       docEl.addEventListener("input", () => {
         const val = docEl.innerText.trim();
@@ -100,6 +98,76 @@ function updateContactFields(contact) {
       }
     }
   });
+}
+
+// Watch job inputs to clean and synchronize title & company in real time
+function initJobInputWatchers() {
+  const compInput = document.getElementById("company-name");
+  const titleInput = document.getElementById("job-title");
+
+  let timeout = null;
+  const triggerJobAnalysis = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(async () => {
+      const rawTitle = titleInput.value.trim();
+      const rawComp = compInput.value.trim();
+      if (!rawTitle && !rawComp) return;
+
+      try {
+        const res = await fetch("/api/analyze-job", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ raw_title: rawTitle, company_name: rawComp })
+        });
+        const data = await res.json();
+
+        if (data.clean_title && data.clean_title !== rawTitle) {
+          titleInput.value = data.clean_title;
+        }
+        if (data.company_name && !compInput.value.trim()) {
+          compInput.value = data.company_name;
+        }
+
+        // Update A4 Sheet
+        if (data.company_name) {
+          document.getElementById("doc-recipient-company").textContent = data.company_name;
+        }
+        if (data.department) {
+          document.getElementById("doc-recipient-department").textContent = data.department;
+        }
+        if (data.clean_subject) {
+          document.getElementById("doc-subject").textContent = data.clean_subject;
+        }
+
+        // Show analysis card
+        displayJobAnalysis(data);
+
+      } catch (e) {
+        console.warn("Analyse auto:", e);
+      }
+    }, 600);
+  };
+
+  titleInput.addEventListener("input", triggerJobAnalysis);
+  compInput.addEventListener("input", triggerJobAnalysis);
+}
+
+function displayJobAnalysis(data) {
+  const card = document.getElementById("job-analysis-card");
+  const bContract = document.getElementById("badge-contract");
+  const aCompany = document.getElementById("analysis-company");
+  const aTitle = document.getElementById("analysis-title");
+  const aDept = document.getElementById("analysis-dept");
+
+  if (!card) return;
+
+  if (data.clean_title || data.company_name) {
+    if (aCompany) aCompany.textContent = data.company_name || "Entreprise identifiée";
+    if (aTitle) aTitle.textContent = data.clean_title || "Poste épuré";
+    if (aDept) aDept.textContent = data.department || "Direction";
+    if (bContract) bContract.textContent = data.contract_type || "Poste Clé";
+    card.classList.remove("hidden");
+  }
 }
 
 // Check API status
@@ -218,7 +286,6 @@ function initCVUpload() {
       const data = await res.json();
       cvData.raw_text = data.raw_text || "";
 
-      // Update real contacts in state and UI
       updateContactFields(data.contact);
 
       cvFilename.textContent = data.filename;
@@ -266,7 +333,7 @@ function initTabs() {
     if (!url) return;
 
     fetchUrlLabel.textContent = "Analyse...";
-    urlFeedback.textContent = "Lecture et synthèse de l'annonce en cours...";
+    urlFeedback.textContent = "Épuration du titre & analyse stratégique de l'entreprise...";
     urlFeedback.className = "text-[11px] text-blue-600 animate-pulse font-medium";
 
     try {
@@ -279,20 +346,40 @@ function initTabs() {
 
       if (data.success && data.text) {
         document.getElementById("job-text").value = data.text;
-        if (data.title && !document.getElementById("job-title").value) {
-          document.getElementById("job-title").value = data.title.split("|")[0].split("-")[0].trim();
+
+        // Auto-populate clean title & company
+        if (data.clean_title) {
+          document.getElementById("job-title").value = data.clean_title;
         }
-        urlFeedback.textContent = "Offre analysée avec succès ! (Visible dans l'onglet texte).";
-        urlFeedback.className = "text-[11px] text-emerald-600 font-semibold";
+        if (data.company_name) {
+          document.getElementById("company-name").value = data.company_name;
+        }
+
+        // Update A4 Sheet immediately
+        if (data.company_name) {
+          document.getElementById("doc-recipient-company").textContent = data.company_name;
+        }
+        if (data.department) {
+          document.getElementById("doc-recipient-department").textContent = data.department;
+        }
+        if (data.clean_subject) {
+          document.getElementById("doc-subject").textContent = data.clean_subject;
+        }
+
+        // Show analysis card
+        displayJobAnalysis(data);
+
+        urlFeedback.textContent = `Offre analysée avec succès ! Poste épuré : "${data.clean_title}"`;
+        urlFeedback.className = "text-[11px] text-emerald-600 font-bold";
       } else {
-        urlFeedback.textContent = data.error || "Extraction impossible.";
+        urlFeedback.textContent = data.error || "Extraction automatique impossible.";
         urlFeedback.className = "text-[11px] text-amber-600";
       }
     } catch (e) {
       urlFeedback.textContent = "Erreur lors de la récupération de l'URL.";
       urlFeedback.className = "text-[11px] text-rose-600";
     } finally {
-      fetchUrlLabel.textContent = "Analyser";
+      fetchUrlLabel.textContent = "Analyser l'Offre";
     }
   });
 }
@@ -365,7 +452,7 @@ function initActions() {
 
     btnGenerate.disabled = true;
     progressBox.classList.remove("hidden");
-    progressStep.textContent = "1/3 : Renseignement sur l'entreprise & l'équipe...";
+    progressStep.textContent = "1/3 : Renseignement approfondi sur l'actualité & l'équipe...";
 
     try {
       let researchInsightsText = "";
@@ -379,12 +466,12 @@ function initActions() {
         researchInsightsText = researchData.raw_insights || "";
       } catch (e) {}
 
-      progressStep.textContent = "2/3 : Analyse des synergies & Élimination des clichés IA...";
+      progressStep.textContent = "2/3 : Épuration du titre, analyse des synergies & Élimination des clichés...";
 
       const apiKey = localStorage.getItem("motiva_gemini_api_key") || "";
       const modelName = localStorage.getItem("motiva_gemini_model") || "gemini-2.5-flash";
 
-      progressStep.textContent = "3/3 : Rédaction haute fidélité & préservation des coordonnées...";
+      progressStep.textContent = "3/3 : Rédaction haute fidélité & mise en page A4...";
 
       const genRes = await fetch("/api/generate-letter", {
         method: "POST",
@@ -410,7 +497,7 @@ function initActions() {
 
       const letterData = await genRes.json();
 
-      // Populate Live Document while STRICTLY preserving candidate contacts
+      // Populate Live Document while STRICTLY preserving candidate contacts and clean titles
       populateDocument(letterData);
 
       // Smooth scroll to preview
@@ -430,7 +517,6 @@ function initActions() {
     const meta = data.meta || {};
     const content = data.letter_content || {};
 
-    // Keep candidate contact up to date
     if (cand.name) {
       document.getElementById("doc-candidate-name").textContent = cand.name;
       document.getElementById("doc-signature").textContent = cand.name;
@@ -467,12 +553,10 @@ function initActions() {
     if (content.paragraph_call_to_action) document.getElementById("doc-para-cta").textContent = content.paragraph_call_to_action;
     if (content.valediction) document.getElementById("doc-valediction").textContent = content.valediction;
 
-    // Match score
     if (data.match_score) {
       document.getElementById("match-score-badge").textContent = `Match : ${data.match_score}%`;
     }
 
-    // Insights
     if (data.research_insights && data.research_insights.length > 0) {
       const el1 = document.getElementById("insight-1");
       const el2 = document.getElementById("insight-2");

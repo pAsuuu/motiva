@@ -1,9 +1,10 @@
 import json
 from datetime import datetime
 from typing import Optional, Dict
+from app.job_analyzer import JobAnalyzer
 
 class PromptEngine:
-    """Builds hyper-personalized, authentic, anti-AI cover letter prompts."""
+    """Builds hyper-personalized, authentic, anti-AI cover letter prompts with deep company grounding."""
 
     BANNED_CLICHES = [
         "C'est avec un vif intérêt",
@@ -30,26 +31,31 @@ class PromptEngine:
             "corporate_executive": "Ton institutionnel moderne, soigné, élégant et mesuré, valorisant la vision stratégique et les résultats.",
         }.get(tone, "Ton percutant, honnête, professionnel et direct.")
 
-        return f"""Tu es un rédacteur d'élite et mentor en recrutement spécialisé dans la rédaction de lettres de motivation HAUTE FIDÉLITÉ et AUTHENTIQUES.
+        return f"""Tu es un directeur de recrutement et rédacteur d'élite spécialisé dans les candidatures de HAUT NIVEAU.
 
-L'objectif absolu de l'utilisateur : Une lettre qui sonne 100% HUMAINE, VRAIE, PRÉCISE et SPÉCIFIQUE.
-Le recruteur doit se dire : "Cette personne a pris le temps de nous comprendre, ce n'est absolument pas une lettre générée par IA ou un template réchauffé."
+OBJECTIF CRUCIAL :
+La lettre doit paraître 100% HUMAINE, RÉFLÉCHIE, ULTRA-PRÉCISE et profondément ancrée dans l'actualité et la stratégie réelle de l'entreprise.
+Le recruteur ou manager de l'équipe doit se dire : "Ce candidat comprend exactement notre métier, nos marques, nos défis actuels et ce qu'on attend de lui dès le premier jour."
 
 RÈGLES D'OR DE RÉDACTION :
 1. {tone_instructions}
-2. BANNISSEMENT TOTAL DU JARGON ET DES CLICHÉS IA :
-   Ne JAMAIS utiliser : {', '.join(cls.BANNED_CLICHES)}.
-3. STRUCTURE STRATÉGIQUE (4 MOUVEMENTS NATURELS) :
-   - ACCROCHE (VOUS & LE DÉFI) : Commence immédiatement par l'actualité de l'entreprise, un projet récent, ou le défi concret lié au poste et à l'équipe. Montre d'emblée une vraie curiosité pour ce qu'ils construisent.
-   - LA PREUVE PAR LES FAITS (MOI & L'IMPACT) : Ne te contente pas de lister des qualités. Cite 2 ou 3 faits réels, chiffres, technologies ou projets concrets extraits du CV du candidat qui prouvent qu'il a déjà résolu des problèmes similaires.
-   - LA COLLABORATION (NOUS & L'ÉQUIPE) : Décris comment le candidat s'intégrera dans le quotidien de l'équipe (collaboration produit, tech, opérations ou business). Explique ce qu'ils vont construire ensemble.
-   - CONCLUSION & APPEL À L'ACTION : Simple, chaleureuse et professionnelle. Propose un court échange (15-20 minutes) de manière naturelle. Formule de fin sobre (ex: "Bien cordialement,", "Très bonne semaine à vous,").
-
-4. COORDONNÉES CANDIDAT :
-   Garde STRICTEMENT le nom, l'email, le téléphone et la ville fournis dans la section candidat. N'invente aucun faux contact.
-
-5. FORMAT DE SORTIE :
-Tu dois répondre STRICTEMENT en JSON respectant exactement le schéma demandé, sans aucun markdown englobant (` ```json `), uniquement le JSON brut."""
+2. BANNISSEMENT ABSOLU DES FORMULES CLICHÉES :
+   Interdiction totale d'utiliser : {', '.join(cls.BANNED_CLICHES)}.
+3. ÉPURATION DU TITRE ET DE L'OBJET :
+   - BANNIR TOUT TEXTE BRUT DE SITE D'EMPLOI (ex: 'X recrute pour des postes de...', 'Offre d'emploi', '(H/F)').
+   - Utiliser STRICTEMENT le titre métier noble et épuré (ex: 'Assistant Chef de Projet Marketing').
+   - Préciser la formule de contrat si applicable (ex: 'Objet : Candidature au poste d'Assistant Chef de Projet Marketing (Apprentissage)').
+4. ANCRAGE D'ACTUALITÉ ET DE STRATÉGIE (VOUS & LE DÉFI) :
+   - Mentionne des éléments concrets, récents et stratégiques de l'entreprise (ex: pour Stellantis, citer le plan Dare Forward 2030, la transition vers l'électrique, le déploiement omnicanal de leurs marques comme Peugeot, Fiat, Jeep, Citroën, etc.).
+   - Parle du quotidien et du rôle de l'équipe (Direction Marketing, pôle activation, coordination transversale).
+5. LA PREUVE PAR L'IMPACT (MOI & L'ACTION) :
+   - Sélectionne 2 ou 3 faits tangibles, projets, données ou outils du CV qui prouvent que le candidat est déjà opérationnel.
+6. LA VISION COMMUNE (NOUS & L'ÉQUIPE) :
+   - Comment le candidat contribuera concrètement aux objectifs de l'équipe dès son arrivée.
+7. COORDONNÉES STRICTES :
+   - Conserve à l'identique les coordonnées réelles fournies pour le candidat. Ne jamais générer d'email ou de téléphone fictif.
+8. FORMAT STRICT DE SORTIE :
+   Répondre EXCLUSIVEMENT avec le JSON demandé, sans bloc de code markdown."""
 
     @classmethod
     def build_user_prompt(
@@ -63,40 +69,48 @@ Tu dois répondre STRICTEMENT en JSON respectant exactement le schéma demandé,
         custom_notes: str = "",
         tone: str = "direct_authentic"
     ) -> str:
+        # Normalize and clean job title
+        meta_clean = JobAnalyzer.clean_job_title(job_title or "", company_hint=company_name)
+        clean_title = meta_clean["clean_title"] or "Poste Stratégique"
+        clean_subject = meta_clean["clean_subject"]
+        department = meta_clean["department"]
+
         contact = candidate_contact or {}
         cand_name = contact.get("name") or "Candidat"
         cand_email = contact.get("email") or ""
         cand_phone = contact.get("phone") or ""
         cand_loc = contact.get("location") or "France"
-        cand_head = contact.get("headline") or job_title or "Professionnel Qualifié"
+        cand_head = contact.get("headline") or clean_title
 
         date_str = datetime.now().strftime("%d %B %Y").replace("January", "janvier").replace("February", "février").replace("March", "mars").replace("April", "avril").replace("May", "mai").replace("June", "juin").replace("July", "juillet").replace("August", "août").replace("September", "septembre").replace("October", "octobre").replace("November", "novembre").replace("December", "décembre")
 
-        prompt = f"""Rédige la lettre de motivation parfaite et authentique en t'appuyant sur ces données réelles :
+        prompt = f"""Rédige une lettre de motivation exceptionnelle, ultra-ciblée et percutante :
 
-=== 1. COORDONNÉES RÉELLES DU CANDIDAT (À REPRODUIRE EXACTEMENT) ===
+=== 1. COORDONNÉES CANDIDAT (À REPRODUIRE EXACTEMENT) ===
 Nom : {cand_name}
 Email : {cand_email}
 Téléphone : {cand_phone}
 Ville : {cand_loc}
 Titre : {cand_head}
 
-=== 2. CONTENU DU CV DU CANDIDAT ===
+=== 2. INFORMATIONS ENTREPRISE, ÉQUIPE & ACTUALITÉ STRATÉGIQUE ===
+Entreprise : {company_name}
+Poste épuré : {clean_title}
+Objet préconisé : {clean_subject}
+Direction / Équipe ciblée : {department}
+Éléments d'actualité, stratégie et défis recueillis :
+{company_research or "Grand acteur du secteur. S'appuyer sur la culture et les objectifs de l'entreprise."}
+
+=== 3. DESCRIPTIF / CONTENU DE L'OFFRE ===
+{job_text[:4000] if job_text else "Pas d'annonce fournie, focalise-toi sur le poste et les missions types."}
+
+=== 4. EXPÉRIENCES DU CANDIDAT (CV) ===
 {cv_text[:5000]}
 
-=== 3. INFORMATIONS ENTREPRISE & ÉQUIPE ===
-Nom de l'entreprise : {company_name}
-Poste ciblé : {job_title or "Poste à identifier d'après l'offre"}
-Éléments de recherche recueillis sur l'entreprise et son écosystème :
-{company_research or "Entreprise dynamique du secteur. Analyser les détails dans l'offre."}
+=== 5. ANECDOTE OU SOUHAIT PARTICULIER CANDIDAT ===
+{custom_notes or "Aucune indication particulière."}
 
-=== 4. ANNONCE / DESCRIPTIF DU POSTE ===
-{job_text[:4000] if job_text else "Pas d'annonce fournie, se baser sur le nom de l'entreprise et le poste ciblé."}
-
-=== 5. INDICATIONS PARTICULIÈRES CANDIDAT ===
-{custom_notes or "Aucune consigne particulière."}
-
-=== FORMAT JSON STRICT ATTENDU ===
+=== FORMAT JSON ATTENDU ===
 {{
   "candidate": {{
     "name": "{cand_name}",
@@ -107,27 +121,27 @@ Poste ciblé : {job_title or "Poste à identifier d'après l'offre"}
   }},
   "recipient": {{
     "company": "{company_name}",
-    "department": "À l'attention de l'équipe Recrutement",
-    "city": "Paris"
+    "department": "{department}",
+    "city": "Siège ou Ville"
   }},
   "meta": {{
     "date": "{date_str}",
-    "subject": "Objet : Candidature au poste de [Intitulé exact]"
+    "subject": "{clean_subject}"
   }},
   "letter_content": {{
     "salutation": "Madame, Monsieur,",
-    "paragraph_hook": "Accroche contextuelle basée sur l'actualité ou le défi précis de l'entreprise et l'équipe.",
-    "paragraph_experience": "Réalisations concrètes du CV avec chiffres/outils, démontrant la valeur immédiate.",
-    "paragraph_team_fit": "Collaboration concrète au sein de l'équipe, intégration dans leurs rituels et vision.",
-    "paragraph_call_to_action": "Proposition naturelle d'un échange direct et conclusion sobre.",
+    "paragraph_hook": "Accroche ancrée directement dans l'actualité, la transformation ou le défi concret de {company_name} et de son équipe {department}.",
+    "paragraph_experience": "Faits précis, compétences et réalisations concrètes du CV en résonance directe avec les missions de {clean_title}.",
+    "paragraph_team_fit": "Projection dans le travail d'équipe, la coordination de projets et la dynamique collective de {company_name}.",
+    "paragraph_call_to_action": "Proposition sobre et professionnelle d'un entretien d'échange.",
     "valediction": "Bien cordialement,",
     "signature": "{cand_name}"
   }},
-  "match_score": 94,
+  "match_score": 97,
   "research_insights": [
-    "Insight 1 sur l'entreprise / culture intégré dans la lettre",
-    "Insight 2 sur le défi de l'équipe adressé",
-    "Synergie clé relevée entre le CV et l'offre"
+    "Alignement avec la feuille de route stratégique de {company_name}",
+    "Prise en compte des enjeux spécifiques du poste de {clean_title}",
+    "Mise en valeur d'expériences clés du CV démontrant la valeur opérationnelle"
   ]
 }}
 """

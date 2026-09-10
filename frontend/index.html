@@ -11,15 +11,13 @@
 </head>
 <body class="min-h-full flex flex-col antialiased text-slate-100 selection:bg-blue-500 selection:text-white">
 
-  <!-- Top Announcement / Brand Banner -->
+  <!-- Top Announcement Banner -->
   <div class="bg-gradient-to-r from-blue-900/60 via-indigo-950/60 to-slate-900/60 border-b border-white/5 py-2 px-4 text-center text-xs font-medium text-slate-300">
     <span class="inline-flex items-center space-x-2">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="font-semibold text-white">Moteur Anti-IA v2.4 Actif</span>
+      <span class="font-semibold text-white">Moteur d'Analyse Intelligente v2.5 Actif</span>
       <span class="text-slate-500">&bull;</span>
-      <span>0 cliché détecté &bull; Argumentation factuelle certifiée</span>
-      <span class="text-slate-500">&bull;</span>
-      <a href="#match-section" class="text-blue-400 hover:text-blue-300 underline font-semibold">Voir le score de synergie</a>
+      <span>Épuration des titres de scraping &bull; Recherche stratégique d'entreprise &bull; 0 cliché</span>
     </span>
   </div>
 
@@ -37,18 +35,16 @@
               Studio Pro
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Générateur de lettres de motivation authentiques & export PDF haute fidélité</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Analyse avancée de poste & génération authentique avec export PDF haute fidélité</p>
         </div>
       </div>
 
       <div class="flex items-center space-x-3">
-        <!-- Live API status badge -->
         <button id="btn-open-settings" class="inline-flex items-center space-x-2 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-xl transition">
           <span class="w-2 h-2 rounded-full bg-amber-400" id="api-status-dot"></span>
           <span id="api-status-label">Configurer IA</span>
         </button>
 
-        <!-- GitHub Repo Link -->
         <a id="github-link" href="https://github.com/pAsuuu/motiva" target="_blank" class="inline-flex items-center space-x-1.5 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-xl transition">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
           <span class="hidden sm:inline">GitHub</span>
@@ -60,10 +56,10 @@
   <!-- Main Grid Workspace -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-    <!-- LEFT COLUMN: Inputs, Intelligence & Personalization -->
+    <!-- LEFT COLUMN: Form, Intelligence & Personalization -->
     <div class="lg:col-span-5 space-y-6">
 
-      <!-- Step 1: CV Upload & Contact Verification -->
+      <!-- Step 1: CV Upload & Verified Contacts -->
       <section class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center space-x-2">
@@ -99,7 +95,7 @@
             </div>
             <div>
               <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Titre professionnel</label>
-              <input type="text" id="contact-headline" placeholder="Ex: Lead Engineer" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+              <input type="text" id="contact-headline" placeholder="Ex: Assistant Chef de Projet Marketing" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
             </div>
             <div>
               <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Adresse Email</label>
@@ -123,23 +119,19 @@
         <textarea id="cv-extracted-text" class="mt-2 hidden w-full text-xs font-mono bg-white border border-slate-200 rounded-lg p-2 h-24 focus:outline-none" readonly></textarea>
       </section>
 
-      <!-- Step 2: Company & Job -->
+      <!-- Step 2: Company & Smart Job Extraction -->
       <section class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
-        <div class="flex items-center space-x-2">
-          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">2</span>
-          <h2 class="font-bold text-slate-900 text-sm">L'Entreprise & Le Poste Ciblé</h2>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">2</span>
+            <h2 class="font-bold text-slate-900 text-sm">L'Offre de Poste & L'Entreprise</h2>
+          </div>
+          <span class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+            Épuration IA de titre
+          </span>
         </div>
 
-        <div>
-          <label for="company-name" class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'entreprise *</label>
-          <input type="text" id="company-name" placeholder="Ex: Alan, Doctolib, Qonto, Michelin, Airbus..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-
-        <div>
-          <label for="job-title" class="block text-xs font-semibold text-slate-700 mb-1">Intitulé exact du poste</label>
-          <input type="text" id="job-title" placeholder="Ex: Senior Fullstack Engineer, Chef de Produit..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-
+        <!-- URL / Text Selector -->
         <div>
           <div class="flex border-b border-slate-200 text-xs mb-3">
             <button id="tab-url" class="py-1.5 px-3 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition">Lien de l'offre (URL)</button>
@@ -149,19 +141,59 @@
           <!-- URL Input pane -->
           <div id="pane-url" class="space-y-2">
             <div class="flex space-x-2">
-              <input type="url" id="job-url" placeholder="https://www.welcometothejungle.com/..." class="flex-1 text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-              <button id="btn-fetch-url" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-2 rounded-lg transition inline-flex items-center space-x-1 shadow-sm">
-                <span id="fetch-url-label">Analyser</span>
+              <input type="url" id="job-url" placeholder="https://..." class="flex-1 text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <button id="btn-fetch-url" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 py-2 rounded-lg transition inline-flex items-center space-x-1 shadow-sm">
+                <span id="fetch-url-label">Analyser l'Offre</span>
               </button>
             </div>
-            <p id="url-feedback" class="text-[11px] text-slate-400">L'offre sera lue et synthétisée automatiquement.</p>
+            <p id="url-feedback" class="text-[11px] text-slate-400">Le titre, l'entreprise, le contrat et les missions seront décortiqués sans scories.</p>
           </div>
 
           <!-- Paste Text pane -->
           <div id="pane-text" class="hidden space-y-2">
-            <textarea id="job-text" placeholder="Collez ici le descriptif complet du poste, missions, profil recherché..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-28"></textarea>
+            <textarea id="job-text" placeholder="Collez ici le descriptif de l'offre (ou l'annonce LinkedIn, Welcome to the Jungle...)" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-28"></textarea>
           </div>
         </div>
+
+        <!-- Smart Extraction Results Card -->
+        <div id="job-analysis-card" class="hidden bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-200 rounded-xl p-3 text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-950 flex items-center space-x-1">
+              <span>🎯</span>
+              <span>Analyse Intelligente du Poste</span>
+            </span>
+            <span id="badge-contract" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-600 text-white shadow-sm">
+              Apprentissage
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-slate-500">Entreprise déduite :</span>
+              <div id="analysis-company" class="font-bold text-slate-900">Stellantis</div>
+            </div>
+            <div>
+              <span class="text-slate-500">Poste épuré :</span>
+              <div id="analysis-title" class="font-bold text-slate-900">Assistant Chef de Projet Marketing</div>
+            </div>
+          </div>
+          <div class="text-[11px]">
+            <span class="text-slate-500">Équipe & Pôle ciblé :</span>
+            <div id="analysis-dept" class="font-medium text-slate-800">Direction Marketing & Communication</div>
+          </div>
+        </div>
+
+        <!-- Form fields for Company & Title (auto-filled or editable) -->
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <div>
+            <label for="company-name" class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'entreprise *</label>
+            <input type="text" id="company-name" placeholder="Ex: Stellantis, Doctolib..." class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label for="job-title" class="block text-xs font-semibold text-slate-700 mb-1">Intitulé épuré du poste *</label>
+            <input type="text" id="job-title" placeholder="Ex: Assistant Chef de Projet Marketing" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+
       </section>
 
       <!-- Step 3: Tone & Personal Anecdote -->
@@ -186,14 +218,14 @@
             <label class="cursor-pointer border-2 border-slate-200 rounded-xl p-2.5 text-center text-xs block transition hover:bg-slate-50 tone-card" data-tone="corporate_executive">
               <input type="radio" name="tone" value="corporate_executive" class="hidden">
               <span class="font-bold text-slate-900 block text-[11px]">Corporate & Cadre</span>
-              <span class="text-[10px] text-slate-500">Vision & Leadership</span>
+              <span class="text-[10px] text-slate-500">Vision & Stratégie</span>
             </label>
           </div>
         </div>
 
         <div>
           <label for="custom-notes" class="block text-xs font-semibold text-slate-700 mb-1">Détails ou accomplissements spécifiques à valoriser (optionnel)</label>
-          <textarea id="custom-notes" placeholder="Ex: 'Insister sur ma dernière refonte microservices et mon habitude du travail asynchrone.'" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-16"></textarea>
+          <textarea id="custom-notes" placeholder="Ex: 'Insister sur ma gestion de planning multicanal et ma maîtrise des outils de suivi de projet.'" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none h-16"></textarea>
         </div>
       </section>
 
@@ -212,41 +244,41 @@
         </div>
       </div>
 
-      <!-- Match Score & Synergy Radar (Premium Feature) -->
+      <!-- Match Score & Strategic Radar -->
       <section id="match-section" class="glass-panel text-slate-900 rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Indicateurs de Synergie & Impact</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Indicateurs Stratégiques & Impact</h3>
           </div>
           <span id="match-score-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
-            Match : 96%
+            Match : 97%
           </span>
         </div>
 
         <div class="grid grid-cols-3 gap-2 pt-1 text-center">
           <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-sm font-extrabold text-blue-600">98%</div>
-            <div class="text-[10px] text-slate-500">Adéquation Poste</div>
+            <div class="text-[10px] text-slate-500">Titre Épuré</div>
           </div>
           <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-sm font-extrabold text-emerald-600">100%</div>
             <div class="text-[10px] text-slate-500">Zéro Cliché IA</div>
           </div>
           <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
-            <div class="text-sm font-extrabold text-indigo-600">94%</div>
-            <div class="text-[10px] text-slate-500">Fit Équipe</div>
+            <div class="text-sm font-extrabold text-indigo-600">96%</div>
+            <div class="text-[10px] text-slate-500">Contexte Équipe</div>
           </div>
         </div>
 
         <div id="insights-container" class="mt-2 text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-200">
           <div class="flex items-start space-x-2">
             <span class="text-emerald-600 font-bold">✓</span>
-            <span id="insight-1">Recherche contextuelle sur les défis opérationnels de l'entreprise</span>
+            <span id="insight-1">Intégration de la feuille de route stratégique de l'entreprise</span>
           </div>
           <div class="flex items-start space-x-2">
             <span class="text-emerald-600 font-bold">✓</span>
-            <span id="insight-2">Sélection de réalisations chiffrées réelles extraites de votre CV</span>
+            <span id="insight-2">Argumentation factuelle ancrée sur des réalisations réelles</span>
           </div>
         </div>
       </section>
@@ -258,7 +290,6 @@
 
       <!-- Document Controls Toolbar -->
       <div class="w-full max-w-[210mm] glass-panel-dark border border-white/10 rounded-2xl p-3 mb-4 shadow-xl flex flex-wrap items-center justify-between gap-3 sticky top-20 z-30">
-        <!-- Themes -->
         <div class="flex items-center space-x-1.5 text-xs">
           <span class="text-slate-400 font-medium mr-1 text-[11px]">Thème :</span>
           <button class="theme-btn px-3 py-1 rounded-lg font-semibold border border-blue-500 bg-blue-500/20 text-blue-300 text-[11px] transition" data-theme="modern">Moderne</button>
@@ -266,7 +297,6 @@
           <button class="theme-btn px-3 py-1 rounded-lg font-medium border border-white/10 text-slate-400 hover:bg-white/5 text-[11px] transition" data-theme="minimal">Minimaliste</button>
         </div>
 
-        <!-- Actions -->
         <div class="flex items-center space-x-2">
           <button id="btn-copy-text" class="text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-xl transition inline-flex items-center space-x-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -284,10 +314,9 @@
 
         <!-- Header: Candidate (Left) / Recipient (Right) -->
         <div class="flex justify-between items-start mb-6">
-          <!-- Candidate info -->
           <div class="w-7/12 pr-4">
             <div id="doc-candidate-name" contenteditable="true" class="font-bold text-lg text-slate-900 tracking-tight">Dany Ferreira</div>
-            <div id="doc-candidate-headline" contenteditable="true" class="text-[12px] text-slate-500 font-medium mb-1">Lead Cloud & Software Engineer</div>
+            <div id="doc-candidate-headline" contenteditable="true" class="text-[12px] text-slate-500 font-medium mb-1">Assistant Chef de Projet Marketing</div>
             <div class="text-[11.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <span><b>Email:</b> <span id="doc-candidate-email" contenteditable="true">dany.ferreira@epitech.digital</span></span>
               <span>&bull;</span>
@@ -297,15 +326,13 @@
             </div>
           </div>
 
-          <!-- Recipient info -->
           <div class="w-5/12 pl-4 text-right">
-            <div id="doc-recipient-company" contenteditable="true" class="font-bold text-slate-900 text-sm">Alan Health</div>
-            <div id="doc-recipient-department" contenteditable="true" class="text-[12px] text-slate-600">À l'attention de l'équipe Recrutement</div>
+            <div id="doc-recipient-company" contenteditable="true" class="font-bold text-slate-900 text-sm">Stellantis</div>
+            <div id="doc-recipient-department" contenteditable="true" class="text-[12px] text-slate-600">Direction Marketing & Communication</div>
             <div id="doc-recipient-city" contenteditable="true" class="text-[12px] text-slate-600">Paris, France</div>
           </div>
         </div>
 
-        <!-- Thin accent divider -->
         <div class="border-b a4-line mb-5"></div>
 
         <!-- Date -->
@@ -315,7 +342,7 @@
 
         <!-- Subject -->
         <div id="doc-subject" contenteditable="true" class="font-bold a4-accent text-[13.5px] mb-5 tracking-tight">
-          Objet : Candidature au poste de Lead Cloud & Software Engineer
+          Objet : Candidature au poste de Assistant Chef de Projet Marketing (Apprentissage)
         </div>
 
         <!-- Salutation -->
@@ -326,19 +353,19 @@
         <!-- Paragraphs -->
         <div class="space-y-4 text-slate-700 text-justify">
           <div id="doc-para-hook" contenteditable="true">
-            Votre récente dynamique d'expansion et la recherche constante de transparence dans vos méthodes de travail rendent l'évolution d'Alan particulièrement stimulante. J'ai attentivement suivi vos retours d'expérience sur la montée en charge de votre plateforme et l'exigence que vous portez au quotidien à l'autonomie et à l'impact direct de chaque ingénieur.
+            La trajectoire du groupe Stellantis, portée par les ambitions de son plan stratégique Dare Forward 2030 et l'accélération vers une mobilité décarbonée, place le marketing au cœur de défis passionnants. Accompagner la visibilité et l'attractivité de vos marques phares (Peugeot, Citroën, Fiat, Jeep) auprès de clientèles diversifiées rend cette opportunité d'assistant chef de projet marketing particulièrement stimulante.
           </div>
 
           <div id="doc-para-experience" contenteditable="true">
-            Au cours de mes missions, j'ai consacré l'essentiel de mes interventions à bâtir des architectures cloud hautement résilientes et automatisées. Face à un quadruplement des flux de données critiques lors de mon dernier projet d'infrastructure, j'ai conçu un pipeline de déploiement continu sécurisé qui a réduit la latence globale de 35% tout en garantissant une disponibilité de 99,98%. Ce sont ces réflexes de rigueur et cette culture de la livraison mesurable que je souhaite apporter à vos équipes.
+            Au cours de mes précédents projets, j'ai développé une solide rigueur opérationnelle dans le pilotage de campagnes et la coordination transversale. Confronté à la gestion simultanée de plusieurs échéances de lancement, j'ai structuré des rétroplannings précis, analysé les indicateurs de performance clés et coordonné les livrables avec les équipes créatives et produit. Cette polyvalence et mon souci du détail sont directement transposables au rythme de vos équipes.
           </div>
 
           <div id="doc-para-team" contenteditable="true">
-            Rejoindre votre collectif représente pour moi l'opportunité de collaborer avec des ingénieurs animés par une exigence technique sans compromis et des rituels asynchrones sains. Je me projette très naturellement dans la résolution de vos prochains défis de scalabilité aux côtés des équipes produit et plateforme.
+            Intégrer la Direction Marketing & Communication de Stellantis, c'est pour moi la perspective de rejoindre un collectif exigeant et agile, où l'esprit d'initiative et le sens du résultat sont valorisés. Je me projette avec enthousiasme dans le suivi opérationnel de vos projets de marque et dans l'animation des activations marketing au quotidien.
           </div>
 
           <div id="doc-para-cta" contenteditable="true">
-            Je serais ravi d'échanger une quinzaine de minutes avec vous pour évoquer concrètement comment mon profil peut s'inscrire dans les ambitions techniques de votre feuille de route.
+            Je serais ravi d'échanger une quinzaine de minutes avec vous pour vous présenter plus en détail ma motivation et la façon dont mon profil peut servir les ambitions de votre équipe.
           </div>
         </div>
 
