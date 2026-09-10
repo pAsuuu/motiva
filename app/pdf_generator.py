@@ -12,8 +12,8 @@ class PDFGenerator:
     THEMES = {
         "modern": {
             "primary": colors.HexColor("#0f172a"),    # Slate 900
-            "accent": colors.HexColor("#2563eb"),     # Tech Blue
-            "text": colors.HexColor("#334155"),       # Slate 700
+            "accent": colors.HexColor("#1d4ed8"),     # Royal Blue
+            "text": colors.HexColor("#1e293b"),       # Slate 800
             "muted": colors.HexColor("#64748b"),      # Slate 500
             "line": colors.HexColor("#cbd5e1")
         },
@@ -23,6 +23,13 @@ class PDFGenerator:
             "text": colors.HexColor("#1e293b"),
             "muted": colors.HexColor("#475569"),
             "line": colors.HexColor("#cbd5e1")
+        },
+        "emerald": {
+            "primary": colors.HexColor("#064e3b"),    # Emerald Dark
+            "accent": colors.HexColor("#047857"),     # Forest Emerald
+            "text": colors.HexColor("#1e293b"),
+            "muted": colors.HexColor("#059669"),
+            "line": colors.HexColor("#a7f3d0")
         },
         "minimal": {
             "primary": colors.HexColor("#18181b"),    # Zinc 900
@@ -100,7 +107,7 @@ class PDFGenerator:
             parent=styles['Normal'],
             fontName='Helvetica',
             fontSize=9.5,
-            leading=14.5,
+            leading=14.8,
             textColor=theme["text"],
             alignment=4 # Justified
         )
@@ -121,7 +128,6 @@ class PDFGenerator:
         meta = letter_data.get("meta", {})
         content = letter_data.get("letter_content", {})
 
-        # Build candidate contact line with bullet separator
         cand_name = candidate.get('name', 'Candidat')
         cand_headline = candidate.get('headline', '')
         email = candidate.get('email', '')
@@ -132,7 +138,6 @@ class PDFGenerator:
         if cand_headline:
             cand_text += f"<font size=9.5 color='{theme['muted'].hexval()}'>{cand_headline}</font><br/>"
         
-        # Details row
         details = []
         if email: details.append(f"<b>Email:</b> {email}")
         if phone: details.append(f"<b>Tél:</b> {phone}")
@@ -141,7 +146,6 @@ class PDFGenerator:
         if details:
             cand_text += f"<font size=8.5 color='{theme['text'].hexval()}'>" + " &bull; ".join(details) + "</font>"
 
-        # Recipient text
         recip_company = recipient.get('company', 'Entreprise')
         recip_dept = recipient.get('department', 'Direction du Recrutement')
         recip_city = recipient.get('city', '')
@@ -166,26 +170,21 @@ class PDFGenerator:
         story.append(header_table)
         story.append(Spacer(1, 4*mm))
 
-        # Thin Accent Line
         story.append(HRFlowable(width="100%", thickness=1.5, color=theme["line"], spaceBefore=0, spaceAfter=4*mm))
 
-        # Date Line
         date_val = meta.get("date", "")
         if date_val:
             story.append(Paragraph(date_val, date_style))
             story.append(Spacer(1, 3*mm))
 
-        # Subject Line
         subject_val = meta.get("subject", "Objet : Candidature")
         story.append(Paragraph(subject_val, subject_style))
         story.append(Spacer(1, 4.5*mm))
 
-        # Salutation
         salutation = content.get("salutation", "Madame, Monsieur,")
         story.append(Paragraph(f"<b>{salutation}</b>", body_style))
         story.append(Spacer(1, 3*mm))
 
-        # Paragraphs
         paragraphs = [
             content.get("paragraph_hook", ""),
             content.get("paragraph_experience", ""),
@@ -198,16 +197,14 @@ class PDFGenerator:
                 story.append(Paragraph(p.strip(), body_style))
                 story.append(Spacer(1, 3.2*mm))
 
-        # Valediction & Signature
         valediction = content.get("valediction", "Bien cordialement,")
         sig_name = content.get("signature", cand_name)
 
-        story.append(Spacer(1, 2*mm))
+        story.append(Spacer(1, 2.5*mm))
         story.append(Paragraph(valediction, body_style))
         story.append(Spacer(1, 3.5*mm))
         story.append(Paragraph(sig_name, signature_style))
 
-        # Build PDF
         doc.build(story)
         pdf_bytes = buffer.getvalue()
         buffer.close()

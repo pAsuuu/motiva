@@ -1,10 +1,10 @@
-// Motiva Enterprise Pro Client Logic
+// Motiva Studio Pro Client Logic
 
 let cvData = {
   raw_text: "",
   contact: {
     name: "Dany Ferreira",
-    headline: "Assistant Chef de Projet Marketing",
+    headline: "Chef de Projet IT",
     email: "dany.ferreira@epitech.digital",
     phone: "06 99 88 77 66",
     location: "Paris, France"
@@ -22,8 +22,37 @@ document.addEventListener("DOMContentLoaded", () => {
   initThemeButtons();
   initActions();
   initJobInputWatchers();
+  initKeyboardShortcuts();
   checkBackendStatus();
 });
+
+// Toast notification system
+function showToast(message, type = "info") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+
+  let icon = "✓";
+  let iconColor = "text-emerald-400";
+  if (type === "warn") { icon = "⚠️"; iconColor = "text-amber-400"; }
+  if (type === "error") { icon = "✕"; iconColor = "text-rose-400"; }
+
+  toast.innerHTML = `
+    <span class="${iconColor} font-bold text-sm">${icon}</span>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px) scale(0.95)";
+    toast.style.transition = "all 0.3s ease";
+    setTimeout(() => toast.remove(), 300);
+  }, 3200);
+}
 
 // Two-way synchronization between contact form and A4 sheet
 function initContactTwoWaySync() {
@@ -100,6 +129,17 @@ function updateContactFields(contact) {
   });
 }
 
+// Keyboard shortcuts: Cmd+Enter to generate
+function initKeyboardShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      const btn = document.getElementById("btn-generate");
+      if (btn && !btn.disabled) btn.click();
+    }
+  });
+}
+
 // Watch job inputs to clean and synchronize title & company in real time
 function initJobInputWatchers() {
   const compInput = document.getElementById("company-name");
@@ -128,7 +168,6 @@ function initJobInputWatchers() {
           compInput.value = data.company_name;
         }
 
-        // Update A4 Sheet
         if (data.company_name) {
           document.getElementById("doc-recipient-company").textContent = data.company_name;
         }
@@ -139,13 +178,12 @@ function initJobInputWatchers() {
           document.getElementById("doc-subject").textContent = data.clean_subject;
         }
 
-        // Show analysis card
         displayJobAnalysis(data);
 
       } catch (e) {
         console.warn("Analyse auto:", e);
       }
-    }, 600);
+    }, 550);
   };
 
   titleInput.addEventListener("input", triggerJobAnalysis);
@@ -180,7 +218,7 @@ async function checkBackendStatus() {
     const statusDot = document.getElementById("api-status-dot");
     if (storedKey || data.has_env_key) {
       statusLabel.textContent = "IA Opérationnelle";
-      statusLabel.classList.add("text-emerald-400", "font-semibold");
+      statusLabel.classList.add("text-emerald-400", "font-bold");
       statusDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
     } else {
       statusLabel.textContent = "Mode Démo (Clé IA dispo)";
@@ -226,6 +264,7 @@ function initSettings() {
     localStorage.setItem("motiva_gemini_model", selectModel.value);
     closeModal();
     checkBackendStatus();
+    showToast("Clé API et modèle enregistrés avec succès !");
   });
 }
 
@@ -270,7 +309,7 @@ function initCVUpload() {
 
   async function handleCVUpload(file) {
     cvStatus.textContent = "Extraction en cours...";
-    cvStatus.className = "text-xs text-blue-600 font-semibold animate-pulse";
+    cvStatus.className = "text-xs text-blue-600 font-bold animate-pulse";
 
     const formData = new FormData();
     formData.append("file", file);
@@ -295,10 +334,12 @@ function initCVUpload() {
       cvStatus.textContent = "CV Prêt & Coordonnées à jour ✓";
       cvStatus.className = "text-xs text-emerald-600 font-bold";
 
+      showToast(`CV "${data.filename}" extrait avec succès !`);
+
     } catch (err) {
       cvStatus.textContent = "Erreur de lecture";
       cvStatus.className = "text-xs text-rose-600 font-bold";
-      alert("Impossible de lire ce document. Essayez un format PDF, Word ou texte brut.");
+      showToast("Impossible de lire ce document. Essayez un format PDF, Word ou texte brut.", "error");
     }
   }
 }
@@ -315,15 +356,15 @@ function initTabs() {
   const urlFeedback = document.getElementById("url-feedback");
 
   tabUrl.addEventListener("click", () => {
-    tabUrl.className = "py-1.5 px-3 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition";
-    tabText.className = "py-1.5 px-3 font-medium text-slate-500 hover:text-slate-800 focus:outline-none transition";
+    tabUrl.className = "py-2 px-3.5 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition";
+    tabText.className = "py-2 px-3.5 font-medium text-slate-500 hover:text-slate-900 focus:outline-none transition";
     paneUrl.classList.remove("hidden");
     paneText.classList.add("hidden");
   });
 
   tabText.addEventListener("click", () => {
-    tabText.className = "py-1.5 px-3 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition";
-    tabUrl.className = "py-1.5 px-3 font-medium text-slate-500 hover:text-slate-800 focus:outline-none transition";
+    tabText.className = "py-2 px-3.5 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none transition";
+    tabUrl.className = "py-2 px-3.5 font-medium text-slate-500 hover:text-slate-900 focus:outline-none transition";
     paneText.classList.remove("hidden");
     paneUrl.classList.add("hidden");
   });
@@ -334,7 +375,7 @@ function initTabs() {
 
     fetchUrlLabel.textContent = "Analyse...";
     urlFeedback.textContent = "Épuration du titre & analyse stratégique de l'entreprise...";
-    urlFeedback.className = "text-[11px] text-blue-600 animate-pulse font-medium";
+    urlFeedback.className = "text-[11px] text-blue-400 animate-pulse font-medium";
 
     try {
       const res = await fetch("/api/fetch-job", {
@@ -347,7 +388,6 @@ function initTabs() {
       if (data.success && data.text) {
         document.getElementById("job-text").value = data.text;
 
-        // Auto-populate clean title & company
         if (data.clean_title) {
           document.getElementById("job-title").value = data.clean_title;
         }
@@ -355,7 +395,6 @@ function initTabs() {
           document.getElementById("company-name").value = data.company_name;
         }
 
-        // Update A4 Sheet immediately
         if (data.company_name) {
           document.getElementById("doc-recipient-company").textContent = data.company_name;
         }
@@ -366,18 +405,19 @@ function initTabs() {
           document.getElementById("doc-subject").textContent = data.clean_subject;
         }
 
-        // Show analysis card
         displayJobAnalysis(data);
 
-        urlFeedback.textContent = `Offre analysée avec succès ! Poste épuré : "${data.clean_title}"`;
-        urlFeedback.className = "text-[11px] text-emerald-600 font-bold";
+        urlFeedback.textContent = `Offre analysée avec succès : "${data.company_name} — ${data.clean_title}"`;
+        urlFeedback.className = "text-[11px] text-emerald-400 font-bold";
+        showToast(`Offre "${data.company_name}" analysée avec succès !`);
       } else {
         urlFeedback.textContent = data.error || "Extraction automatique impossible.";
-        urlFeedback.className = "text-[11px] text-amber-600";
+        urlFeedback.className = "text-[11px] text-amber-400";
+        showToast("Site restreint. Vous pouvez coller le texte directement.", "warn");
       }
     } catch (e) {
       urlFeedback.textContent = "Erreur lors de la récupération de l'URL.";
-      urlFeedback.className = "text-[11px] text-rose-600";
+      urlFeedback.className = "text-[11px] text-rose-400";
     } finally {
       fetchUrlLabel.textContent = "Analyser l'Offre";
     }
@@ -412,12 +452,13 @@ function initThemeButtons() {
       currentTheme = theme;
 
       buttons.forEach(b => {
-        b.className = "theme-btn px-3 py-1 rounded-lg font-medium border border-white/10 text-slate-400 hover:bg-white/5 text-[11px] transition";
+        b.className = "theme-btn px-3 py-1.5 rounded-xl font-medium border border-white/10 text-slate-400 hover:bg-white/5 text-[11px] transition inline-flex items-center space-x-1.5";
       });
-      btn.className = "theme-btn px-3 py-1 rounded-lg font-semibold border border-blue-500 bg-blue-500/20 text-blue-300 text-[11px] transition";
+      btn.className = "theme-btn px-3 py-1.5 rounded-xl font-bold border border-blue-500 bg-blue-500/20 text-blue-300 text-[11px] transition inline-flex items-center space-x-1.5";
 
-      sheet.classList.remove("theme-modern", "theme-executive", "theme-minimal");
+      sheet.classList.remove("theme-modern", "theme-executive", "theme-emerald", "theme-minimal");
       sheet.classList.add(`theme-${theme}`);
+      showToast(`Thème "${theme.charAt(0).toUpperCase() + theme.slice(1)}" appliqué`);
     });
   });
 }
@@ -439,11 +480,11 @@ function initActions() {
     const tone = selectedToneRadio ? selectedToneRadio.value : "direct_authentic";
 
     if (!cvData.raw_text && !document.getElementById("cv-extracted-text").value) {
-      alert("Veuillez d'abord déposer votre CV ou renseigner vos informations.");
+      showToast("Veuillez d'abord déposer votre CV à l'étape 1.", "warn");
       return;
     }
     if (!companyName) {
-      alert("Veuillez indiquer le nom de l'entreprise cible.");
+      showToast("Veuillez indiquer le nom de l'entreprise cible.", "warn");
       document.getElementById("company-name").focus();
       return;
     }
@@ -452,7 +493,7 @@ function initActions() {
 
     btnGenerate.disabled = true;
     progressBox.classList.remove("hidden");
-    progressStep.textContent = "1/3 : Renseignement approfondi sur l'actualité & l'équipe...";
+    progressStep.textContent = "1/3 : Analyse approfondie des missions de l'entreprise...";
 
     try {
       let researchInsightsText = "";
@@ -466,7 +507,7 @@ function initActions() {
         researchInsightsText = researchData.raw_insights || "";
       } catch (e) {}
 
-      progressStep.textContent = "2/3 : Épuration du titre, analyse des synergies & Élimination des clichés...";
+      progressStep.textContent = "2/3 : Élimination totale des clichés IA & Ancrage factuel...";
 
       const apiKey = localStorage.getItem("motiva_gemini_api_key") || "";
       const modelName = localStorage.getItem("motiva_gemini_model") || "gemini-2.5-flash";
@@ -497,14 +538,14 @@ function initActions() {
 
       const letterData = await genRes.json();
 
-      // Populate Live Document while STRICTLY preserving candidate contacts and clean titles
       populateDocument(letterData);
 
-      // Smooth scroll to preview
+      showToast("Votre lettre a été rédigée avec succès !");
+
       document.getElementById("print-area").scrollIntoView({ behavior: "smooth", block: "start" });
 
     } catch (err) {
-      alert("Erreur lors de la génération : " + err.message);
+      showToast("Erreur lors de la génération : " + err.message, "error");
     } finally {
       btnGenerate.disabled = false;
       progressBox.classList.add("hidden");
@@ -554,7 +595,7 @@ function initActions() {
     if (content.valediction) document.getElementById("doc-valediction").textContent = content.valediction;
 
     if (data.match_score) {
-      document.getElementById("match-score-badge").textContent = `Match : ${data.match_score}%`;
+      document.getElementById("match-score-badge").textContent = `Adéquation : ${data.match_score}%`;
     }
 
     if (data.research_insights && data.research_insights.length > 0) {
@@ -627,6 +668,8 @@ function initActions() {
       a.remove();
       window.URL.revokeObjectURL(downloadUrl);
 
+      showToast("PDF A4 haute résolution téléchargé avec succès !");
+
     } catch (err) {
       if (confirm("Génération serveur indisponible. Souhaitez-vous imprimer / enregistrer en PDF via votre navigateur ?")) {
         window.print();
@@ -643,7 +686,7 @@ function initActions() {
     const fullText = `
 ${data.candidate.name}
 ${data.candidate.headline}
-Email: ${data.candidate.email} | Tél: ${data.candidate.phone} | ${data.candidate.location}
+Email : ${data.candidate.email} | Tél : ${data.candidate.phone} | ${data.candidate.location}
 
 ${data.recipient.company}
 ${data.recipient.department}
@@ -668,9 +711,7 @@ ${data.letter_content.signature}
     `.trim();
 
     navigator.clipboard.writeText(fullText).then(() => {
-      const orig = btnCopyText.innerHTML;
-      btnCopyText.innerHTML = `<span class="text-emerald-400 font-bold">Copié ✓</span>`;
-      setTimeout(() => btnCopyText.innerHTML = orig, 2000);
+      showToast("Texte intégral copié dans le presse-papiers !");
     });
   });
 }
